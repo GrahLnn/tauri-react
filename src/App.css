@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+  --font-body: "Inter", "Avenir", "Helvetica", "Arial", sans-serif;
+}
+
+body {
+  @apply h-screen;
+  @apply m-0;
+  @apply font-body;
+  @apply text-[#090909] dark:text-[#f6f6f6];
+
+  @apply dark:bg-gradient-to-b
+         dark:from-[#11181c]
+         dark:to-[#101725];
+}
+
+#root {
+  @apply h-full;
+}
+
+main {
+  @apply h-full;
+}
+
+h1 {
+  @apply font-bold text-2xl;
+}
