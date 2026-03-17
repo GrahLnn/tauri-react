@@ -1,6 +1,6 @@
 {
   "milestone": "window-lifecycle-hardening",
-  "round": 1,
+  "round": 2,
   "status": "fail",
   "validatorsRun": {
     "test": { "passed": true, "command": "bun test", "exitCode": 0 },
@@ -12,18 +12,23 @@
     "total": 1,
     "passed": 0,
     "failed": 1,
-    "failedFeatures": ["window-control-ownership-regressions"]
+    "failedFeatures": ["window-control-reopen-freshness-regressions"]
   },
   "blockingIssues": [
     {
-      "featureId": "window-control-ownership-regressions",
+      "featureId": "window-control-reopen-freshness-regressions",
       "severity": "blocking",
-      "description": "src/flow/windowMaximized.ts caches maximize-state actors forever by window label even though Window.getCurrent() is captured at actor creation time, so closing and reopening a window with the same label can reuse a stale actor bound to a disposed native window instead of establishing fresh renderer-local ownership."
+      "description": "src/flow/windowMaximized.ts still captures Window.getCurrent() once at actor creation time and reuses maximize actors indefinitely from a module-level map keyed only by label, so reopening a window under the same label can inherit stale ownership bound to a disposed native window."
     },
     {
-      "featureId": "window-control-ownership-regressions",
+      "featureId": "window-control-reopen-freshness-regressions",
       "severity": "blocking",
-      "description": "tests/window_ownership.logic.test.ts does not cover close/reopen with the same window label, leaving VAL-CROSS-004 and the reopen portion of VAL-CONTROLS-007 unverified despite the feature handoff claiming reopen regression coverage."
+      "description": "src/flow/windowFocus.ts still keeps a never-evicted label-keyed focus actor cache with no teardown or refresh semantics for close/reopen cycles, so the fix feature does not encode the required same-label reopen freshness contract."
+    },
+    {
+      "featureId": "window-control-reopen-freshness-regressions",
+      "severity": "blocking",
+      "description": "tests/window_ownership.logic.test.ts still lacks same-label close/reopen coverage, so VAL-CONTROLS-007 and VAL-CROSS-004 remain unverified for the reported failure mode."
     }
   ],
   "appliedUpdates": [],
@@ -31,8 +36,8 @@
   "rejectedObservations": [
     {
       "observation": "Add a mission-library note that any per-window cache keyed only by label must define teardown/recreation semantics for close-reopen cycles because Tauri can reuse labels like main-1.",
-      "reason": "Rejected for now because the observation is derived from a single failed feature review and needs confirmation from the eventual fix path before promoting it to durable shared knowledge."
+      "reason": "Rejected again because the current rerun confirms the issue remains unresolved in one feature family, but that is still insufficient evidence to promote a new durable knowledge entry without a successful fix demonstrating the intended pattern."
     }
   ],
-  "previousRound": null
+  "previousRound": ".factory/validation/window-lifecycle-hardening/scrutiny/synthesis.json@round1"
 }
