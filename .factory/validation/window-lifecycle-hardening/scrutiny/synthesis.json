@@ -1,6 +1,6 @@
 {
   "milestone": "window-lifecycle-hardening",
-  "round": 2,
+  "round": 3,
   "status": "fail",
   "validatorsRun": {
     "test": { "passed": true, "command": "bun test", "exitCode": 0 },
@@ -9,12 +9,30 @@
     "rust-check": { "passed": true, "command": "cargo check --manifest-path src-tauri/Cargo.toml", "exitCode": 0 }
   },
   "reviewsSummary": {
-    "total": 1,
+    "total": 2,
     "passed": 0,
-    "failed": 1,
-    "failedFeatures": ["window-control-reopen-freshness-regressions"]
+    "failed": 2,
+    "failedFeatures": [
+      "window-control-ownership-regressions",
+      "window-control-reopen-freshness-regressions"
+    ]
   },
   "blockingIssues": [
+    {
+      "featureId": "window-control-ownership-regressions",
+      "severity": "blocking",
+      "description": "src/flow/windowMaximized.ts still keeps a never-evicted label-keyed maximize actor cache that captures Window.getCurrent() once, so same-label reopen can inherit stale ownership bound to a disposed native window."
+    },
+    {
+      "featureId": "window-control-ownership-regressions",
+      "severity": "blocking",
+      "description": "src/flow/windowFocus.ts still reuses a label-keyed focus actor cache without teardown or refresh semantics for close/reopen cycles, so reopened windows can inherit stale renderer-local ownership."
+    },
+    {
+      "featureId": "window-control-ownership-regressions",
+      "severity": "blocking",
+      "description": "tests/window_ownership.logic.test.ts only covers different-label isolation and still lacks same-label close/reopen regression coverage, so the stale ownership failure mode remains unverified."
+    },
     {
       "featureId": "window-control-reopen-freshness-regressions",
       "severity": "blocking",
@@ -36,8 +54,8 @@
   "rejectedObservations": [
     {
       "observation": "Add a mission-library note that any per-window cache keyed only by label must define teardown/recreation semantics for close-reopen cycles because Tauri can reuse labels like main-1.",
-      "reason": "Rejected again because the current rerun confirms the issue remains unresolved in one feature family, but that is still insufficient evidence to promote a new durable knowledge entry without a successful fix demonstrating the intended pattern."
+      "reason": "Rejected because both current failed reviews confirm the issue remains unresolved, but that is still insufficient evidence to promote a durable knowledge entry without a successful fix demonstrating the intended pattern."
     }
   ],
-  "previousRound": ".factory/validation/window-lifecycle-hardening/scrutiny/synthesis.json@round1"
+  "previousRound": ".factory/validation/window-lifecycle-hardening/scrutiny/synthesis.json@round2"
 }

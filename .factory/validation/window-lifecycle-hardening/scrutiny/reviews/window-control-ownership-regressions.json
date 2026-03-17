@@ -1,34 +1,34 @@
 {
   "featureId": "window-control-ownership-regressions",
-  "reviewedAt": "2026-03-17T15:10:00Z",
+  "reviewedAt": "2026-03-17T15:15:12Z",
   "commitId": "592a1bb",
   "transcriptSkeletonReviewed": true,
   "diffReviewed": true,
   "status": "fail",
   "codeReview": {
-    "summary": "The change correctly removes the prior module-global actor sharing for focus and maximize state, but it does not fully cover the feature contract because reopen freshness is untested and the maximize-state actor cache can retain stale native-window ownership across close/reopen of the same label.",
+    "summary": "The feature correctly split maximize/focus actors by window label, but it still leaves blocking stale-ownership risk for same-label close/reopen cycles because cached actors are never torn down or refreshed and the added tests only prove different labels get different actors.",
     "issues": [
       {
         "file": "src/flow/windowMaximized.ts",
-        "line": 23,
+        "line": 46,
         "severity": "blocking",
-        "description": "createWindowMaximizedActor() still binds each cached actor to a single Window.getCurrent() instance at creation time, and getWindowMaximizedActor() reuses that actor forever by label. When a secondary window is closed and later reopened with the same label, the reopened renderer reuses the old actor from windowActors instead of creating a fresh one, so maximize-state sync can stay attached to the disposed native window and violate the required open-close-reopen freshness contract."
+        "description": "windowActors is a never-evicted map keyed only by label, and each actor captures Window.getCurrent() when first created. If a window closes and a new renderer reopens under the same label, getWindowMaximizedActor() reuses the old actor still bound to the disposed native window, so maximize ownership can stay stale across reopen cycles."
+      },
+      {
+        "file": "src/flow/windowFocus.ts",
+        "line": 36,
+        "severity": "blocking",
+        "description": "The focus actor cache is also label-keyed with no close/reopen teardown path. A reopened renderer that reuses a previous label receives the existing actor and its old event-subscription lifecycle instead of a fresh ownership instance, so the required reopen freshness contract is not actually implemented."
       },
       {
         "file": "tests/window_ownership.logic.test.ts",
-        "line": 45,
+        "line": 22,
         "severity": "blocking",
-        "description": "The added tests only prove that different labels get different actors within one process/module load. They do not exercise closing and reopening a window with the same label, nor do they verify that controls/focus/maximize state are refreshed after reopen, so the feature requirements for VAL-CROSS-004 and the reopen portion of VAL-CONTROLS-007 remain uncovered."
+        "description": "The added regression tests cover only different labels (main vs main-1). They do not simulate closing and reopening a window under the same label, so they do not verify the milestone requirement that open-close-reopen sequences get fresh control ownership and lifecycle state."
       }
     ]
   },
-  "sharedStateObservations": [
-    {
-      "area": "knowledge",
-      "observation": "The mission library notes module-scope window-handle caching as a pitfall, but it does not document the stricter rule exposed by this review: any per-window cache keyed only by label must also define teardown/recreation semantics for close-reopen cycles, because Tauri commonly reuses labels like main-1 for reopened windows.",
-      "evidence": "Current mission notes mention Module-scope window-handle caching can bind controls to the wrong window in multi-window sessions in .factory/library/windows.md, while this feature introduced windowActors maps in src/flow/windowMaximized.ts and src/flow/windowFocus.ts without any eviction or reopen-freshness contract."
-    }
-  ],
-  "addressesFailureFrom": null,
-  "summary": "Fail: renderer-local actor isolation is an improvement, but maximize-state ownership can stay stale across close/reopen of the same window label and the new tests never cover that required regression path."
+  "sharedStateObservations": [],
+  "addressesFailureFrom": "C:\\Users\\admin\\tauri-react\\.factory\\validation\\window-lifecycle-hardening\\scrutiny\\synthesis.json",
+  "summary": "Fail: same-label reopen freshness remains unresolved. The feature localizes actors per label, but both maximize and focus caches are immortal label-only maps, so a reopened window can still inherit stale actor ownership; the tests never cover that failure mode."
 }
