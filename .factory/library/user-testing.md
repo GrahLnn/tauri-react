@@ -1,0 +1,33 @@
+# User Testing
+
+Validation surface findings and runtime testing guidance.
+
+**What belongs here:** Real-surface validation notes, setup constraints, concurrency guidance, gotchas.
+**What does NOT belong here:** Generic architecture notes (use `architecture.md`).
+
+---
+
+## Validation Surface
+
+- Primary validation surface: the Tauri desktop window itself.
+- Core flows to validate:
+  - Startup reaches one visible interactive primary main window.
+  - Opening a new window increases visible user-window count by exactly one.
+  - Closing one of many visible windows keeps the app alive.
+  - Closing the last visible user window exits cleanly.
+  - Open-close-reopen preserves fresh control ownership and fresh maximize/fullscreen state.
+- Evidence should include screenshots, console errors, and terminal traces for window count / role / shutdown behavior.
+
+## Validation Concurrency
+
+- Real desktop-window validation max concurrent validators: **1**.
+- Rationale:
+  - Windows + Tauri desktop instances are relatively heavy.
+  - Dry run observed roughly +20 processes and ~876 MB peak working-set growth during startup/build activity.
+  - Port `3000` ownership can be noisy in this environment, so parallel desktop validation would add avoidable flakiness.
+
+## Runtime Notes
+
+- Check ownership of `http://localhost:3000` before assuming a fresh dev stack.
+- `bun run lint` currently exits successfully with warnings; treat unrelated warnings as background noise unless your feature changes them.
+- If the redesign removes support/prewarm windows entirely, that is an acceptable and preferred outcome as long as user-visible flows remain correct.

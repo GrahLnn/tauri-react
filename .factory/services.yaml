@@ -1,0 +1,16 @@
+commands:
+  install: bun install
+  test: bun test
+  lint: bun run lint
+  typecheck: bun run typecheck
+  build: bun run build
+  rust-check: cargo check --manifest-path src-tauri/Cargo.toml
+  check-all: bun run check:all
+
+services:
+  tauri-dev:
+    start: pwsh -NoLogo -NoProfile -Command "$env:NODE_ENV='development'; bun tauri dev --no-watch"
+    stop: pwsh -NoLogo -NoProfile -Command "$pids = @(Get-NetTCPConnection -State Listen -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique); if ($pids.Count -gt 0) { $pids | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }"
+    healthcheck: curl -sf http://localhost:3000
+    port: 3000
+    depends_on: []
