@@ -14,3 +14,7 @@ Architectural decisions, invariants, and patterns for this mission.
 - Primary-main-only startup work belongs only to the true primary visible main window.
 - Window controls and window-state subscriptions must bind to the owning renderer's native window, not a shared module-level handle.
 - Multi-window correctness is the primary goal; performance optimizations are acceptable only if they preserve these invariants.
+
+- Explicit prewarm/discard behavior, if retained, must be keyed by the shared specta window enum and must not rely on timer-driven guesses.
+- Homepage effect routing must use the same authoritative route/window-type resolution as App.tsx and backend window-kind metadata.
+- Discarded prewarm state must not be resurrected by later open-window or reopen flows.

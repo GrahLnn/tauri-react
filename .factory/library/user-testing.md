@@ -27,6 +27,8 @@ Validation surface findings and runtime testing guidance.
   - Port `3000` ownership can be noisy in this environment, so parallel desktop validation would add avoidable flakiness.
 
 ## Runtime Notes
+- Desktop unsafe validation for the typed-prewarm mission is currently deferred/manual; implementation workers should still preserve desktop-surface correctness assumptions.
+- Manual desktop validation for this mission should include homepage-triggered prewarm, discard-prewarm, discard-then-open, and open-close-reopen flows in addition to baseline startup/open/close checks.
 
 - Check ownership of `http://localhost:3000` before assuming a fresh dev stack.
 - Validation runs should disable optional dev overlays when they obscure the real app shell; real-window evidence must come from the actual Tauri-visible surface, not overlay UI.
