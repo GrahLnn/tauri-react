@@ -26,3 +26,4 @@ Mission-specific notes about the window lifecycle code surface.
 - Module-scope window-handle caching can bind controls to the wrong window in multi-window sessions.
 - Startup ordering matters: role resolution, app shell mounting, and primary-main-only side effects must not fight each other.
 - Close accounting must distinguish visible user windows from hidden/support windows.
+- If logs show `startup: page load finished for main` and the process still exits immediately afterward, treat the remaining blocker as a post-page-load native shutdown issue rather than an initial bootstrap/platform-detection issue.
