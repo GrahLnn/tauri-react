@@ -24,7 +24,7 @@ Use this skill for frontend features that change bootstrap role resolution, app-
    - `bun run typecheck`
    - `bun run lint`
    - `cargo check --manifest-path src-tauri/Cargo.toml` if command bindings or Rust-side metadata changed
-8. Manually verify the real Tauri window surface with at least two visible windows. Exercise close, minimize, maximize/fullscreen, drag, and reopen flows relevant to the feature.
+8. Manually verify the real Tauri window surface with at least two visible windows when the mission has not explicitly deferred desktop validation. If the mission guidance says desktop validation is deferred/manual, complete the strongest code-and-validator evidence available for the feature, record the deviation explicitly, and leave real-surface checks for the later validator/manual pass.
 9. If `bun tauri dev --no-watch` exits immediately, capture `.tmp/tauri-dev.log` and `.tmp/tauri-dev.err.log`, fix the startup blocker first, and only then continue to user-surface validation.
 10. For startup-stabilization and bootstrap/titlebar tasks on Windows, inspect early platform-resolution paths first. Treat eager `@tauri-apps/plugin-os` access and similar pre-internals Tauri API reads as a primary diagnostic path before assuming a deeper lifecycle bug.
 11. For narrowly scoped launch-stabilization work, process/log verification can satisfy the feature once startup is stable enough for later dedicated validators to exercise the full desktop interaction matrix.

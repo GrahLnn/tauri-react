@@ -1,62 +1,70 @@
 {
   "milestone": "window-lifecycle-core",
-  "round": 1,
-  "status": "pass",
+  "round": 2,
+  "status": "fail",
   "validatorsRun": {
-    "test": {
-      "passed": true,
-      "command": "bun test",
-      "exitCode": 0
-    },
-    "typecheck": {
-      "passed": true,
-      "command": "bun run typecheck",
-      "exitCode": 0
-    },
-    "lint": {
-      "passed": true,
-      "command": "bun run lint",
-      "exitCode": 0
-    },
-    "rust-check": {
-      "passed": true,
-      "command": "cargo check --manifest-path \"C:\\Users\\admin\\tauri-react\\src-tauri\\Cargo.toml\"",
-      "exitCode": 0
-    }
+    "test": { "passed": true, "command": "bun test", "exitCode": 0 },
+    "typecheck": { "passed": true, "command": "bun run typecheck", "exitCode": 0 },
+    "lint": { "passed": true, "command": "bun run lint", "exitCode": 0 },
+    "rust-check": { "passed": true, "command": "cargo check --manifest-path src-tauri/Cargo.toml", "exitCode": 0 }
   },
   "reviewsSummary": {
     "total": 4,
-    "passed": 4,
-    "failed": 0,
-    "failedFeatures": []
+    "passed": 1,
+    "failed": 3,
+    "failedFeatures": [
+      "typed-prewarm-discard-commands",
+      "homepage-effect-window-routing",
+      "bootstrap-shell-gating-hardening"
+    ]
   },
-  "blockingIssues": [],
+  "blockingIssues": [
+    {
+      "featureId": "typed-prewarm-discard-commands",
+      "severity": "blocking",
+      "description": "`src-tauri/src/utils/window.rs` exposes typed prewarm/discard commands but only mutates an in-memory enum set; it does not create, track, or dispose actual prepared backend window state, so discard/non-resurrection guarantees remain unimplemented for VAL-LIFECYCLE-007 and VAL-CROSS-003."
+    },
+    {
+      "featureId": "homepage-effect-window-routing",
+      "severity": "blocking",
+      "description": "`src/flow/bootstrap/index.ts` reintroduces a bootstrap-time `crab.prewarmWindow(...)` side effect for the resolved primary main window, conflicting with the no-automatic-prewarm contract and the feature's own retained no-prewarm assertions."
+    },
+    {
+      "featureId": "bootstrap-shell-gating-hardening",
+      "severity": "blocking",
+      "description": "`src-tauri/src/utils/window.rs:get_mouse_and_window_position` still hardcodes `app.get_webview_window(\"main\")`, so commands invoked from secondary visible windows can still target the wrong native window, violating VAL-CONTROLS-008."
+    }
+  ],
   "appliedUpdates": [],
   "suggestedGuidanceUpdates": [
     {
       "target": "skills",
-      "suggestion": "Update `window-controls-worker` guidance so startup-stabilization and bootstrap/titlebar tasks explicitly call out early platform-resolution and `@tauri-apps/plugin-os` crashes as a first diagnostic path, and clarify that process/log verification can satisfy narrowly scoped launch-stabilization work before later desktop validators take over.",
-      "evidence": "`validation-surface-launch-stabilization` and `renderer-role-and-control-binding` both reported justified deviations from manual desktop verification because startup was blocked by early `@tauri-apps/plugin-os` access before Tauri OS internals were ready.",
+      "suggestion": "Update `window-controls-worker` guidance so it explicitly distinguishes deferred-manual desktop-validation missions from feature-local code validation, and require workers to mark procedure deviations accurately when only automated checks are possible.",
+      "evidence": "Both `homepage-effect-window-routing` and `bootstrap-shell-gating-hardening` reviews found the skill's mandatory manual-desktop step mismatched this mission's deferred desktop validation, and one handoff incorrectly claimed the procedure was fully followed without interactive checks.",
       "isSystemic": true
     },
     {
       "target": "skills",
-      "suggestion": "Update `window-lifecycle-worker` guidance to explicitly allow automated-only completion for backend-only close-accounting work when Rust lifecycle regressions fully cover the behavior and desktop-surface validation is delegated to dedicated validation features.",
-      "evidence": "`window-close-accounting` completed with focused Rust regression coverage and a justified deviation from the skill's blanket manual desktop-validation step.",
+      "suggestion": "Update `window-lifecycle-worker` guidance to acknowledge backend contract refactors where establishing a minimal seam before meaningful failing tests is justified, instead of enforcing a rigid tests-first sequence that workers must immediately violate.",
+      "evidence": "The `typed-prewarm-discard-commands` review found the worker had to deviate from tests-first because the previous code exposed no real prewarm/discard seam to test until the state shape was introduced.",
       "isSystemic": false
     },
     {
       "target": "AGENTS.md",
-      "suggestion": "Add explicit Windows mission guidance that `.factory/init.sh` should be read and translated to Windows-native commands rather than executed directly when it is a POSIX shell script.",
-      "evidence": "`validation-surface-launch-stabilization` attempted to execute `.factory/init.sh` under PowerShell before falling back to reading it; the worker handoff recorded this as a preventable procedure deviation.",
+      "suggestion": "Add mission guidance that validation or review claims must stay aligned with the implemented contract and retained tests; if a feature changes the intended behavior (such as homepage prewarm), stale helper APIs/tests must be updated or removed in the same change.",
+      "evidence": "The `homepage-effect-window-routing` review found implementation behavior diverged from retained `shouldRequestWindowPrewarm` test assertions, allowing contradictory contract signals to coexist.",
       "isSystemic": false
     }
   ],
   "rejectedObservations": [
     {
-      "observation": "Document the recurring `@tauri-apps/plugin-os` startup failure in mission shared-state docs.",
-      "reason": "recommend-to-orchestrator instead of apply-now because it affects mission/library guidance outside this validator's additive factual updates and duplicates the broader skill-guidance recommendation."
+      "observation": "Document the remaining `get_mouse_and_window_position` hotspot in `.factory/library/windows.md`.",
+      "reason": "Rejected for now because this synthesis found blocking product issues but did not apply repository updates; the observation is specific to a fix feature rather than a broadly reusable validated fact to add atomically during failed scrutiny."
+    },
+    {
+      "observation": "Record the synthetic-inventory prewarm design in library docs.",
+      "reason": "Rejected because the review concluded that design is incomplete relative to the contract, so documenting it as shared knowledge would legitimize a failing implementation."
     }
   ],
-  "previousRound": null
+  "previousRound": "C:\\Users\\admin\\tauri-react\\.factory\\validation\\window-lifecycle-core\\scrutiny\\synthesis.json"
 }

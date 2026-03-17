@@ -1,0 +1,34 @@
+{
+  "featureId": "typed-prewarm-discard-commands",
+  "reviewedAt": "2026-03-17T13:42:45Z",
+  "commitId": "b6f0d74",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The feature adds typed Specta-backed prewarm/discard commands and removes automatic bootstrap timing dependence, but the backend never ties the prepared inventory to actual hidden/prepared window instances. discard_prewarm_window only mutates an in-memory set, so any already-created prepared window would remain alive and could still surface through later lifecycle flows, leaving VAL-LIFECYCLE-007 and VAL-CROSS-003 unproven in code.",
+    "issues": [
+      {
+        "file": "src-tauri/src/utils/window.rs",
+        "line": 381,
+        "severity": "blocking",
+        "description": "prewarm_window only records the enum in prepared_window_inventory and does not create, track, or hide any prepared backend window/resource. Because the feature contract is specifically about backend prewarm/discard commands and later open-window reuse, the implementation changes the API surface but not the actual window lifecycle behavior those commands are supposed to govern."
+      },
+      {
+        "file": "src-tauri/src/utils/window.rs",
+        "line": 387,
+        "severity": "blocking",
+        "description": "discard_prewarm_window removes an enum entry from the in-memory set, but it does not dispose of any potentially prepared window instance or other backend state. If a prewarmed hidden window existed, discard would leave that native state intact, so discarded prepared state could still participate in later enumeration/open flows. This falls short of the requirement that discarded prepared state must not be revived later."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The worker explicitly deviated from the skill tests-first step because no concrete prewarm inventory seam existed yet. The skill procedure may need to acknowledge that for backend contract redesigns, creating a minimal state seam before writing meaningful failing tests can be justified.",
+      "evidence": "worker-transcripts.jsonl entry for session 3c8b5e4e-b80b-4da3-bc3c-9f65cc892ff8 plus handoff.skillFeedback.deviations[0]"
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Review failed: the typed command surface and tests are in place, but the implementation only tracks a synthetic enum inventory and does not actually prewarm/discard backend window state, so discard/non-resurrection guarantees are not fully implemented."
+}

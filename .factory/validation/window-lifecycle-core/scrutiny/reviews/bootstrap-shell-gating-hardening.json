@@ -1,0 +1,33 @@
+{
+  "featureId": "bootstrap-shell-gating-hardening",
+  "reviewedAt": "2026-03-17T13:43:46.621981+00:00",
+  "commitId": "6212d964b48f8eafb7b5a8928fc4982aac2ec94f",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "Bootstrap shell gating correctly blocks non-user windows from mounting the shell during ready state, but it does not address the feature's main-window command ownership requirement because active-window command paths still hardwire the literal main native window.",
+    "issues": [
+      {
+        "file": "C:\\Users\\admin\\tauri-react\\src-tauri\\src\\utils\\window.rs",
+        "line": 199,
+        "severity": "blocking",
+        "description": "`get_mouse_and_window_position` still calls `app.get_webview_window(\"main\")`, so secondary visible main windows invoke the command against the literal primary window instead of their owning native window. The reviewed feature claims to satisfy VAL-CONTROLS-008, but this hardwired main-handle path remains unchanged and continues to allow wrong-window behavior drift for user-visible commands."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The `window-controls-worker` skill still mandates manual multi-window desktop verification even when the mission explicitly defers desktop validation, and this worker deviated for that reason. The procedure should acknowledge deferred-manual missions so shell-gating reviews do not appear non-compliant by default.",
+      "evidence": "Skill step 8 requires manual Tauri verification; handoff.skillFeedback.followedProcedure=false cites mission guidance deferring desktop unsafe validation, and suggestedChanges asks to clarify the skill."
+    },
+    {
+      "area": "knowledge",
+      "observation": "The mission library documents the general rule that secondary-window command paths must not hardcode the literal main handle, but it does not capture the concrete remaining hotspot in `get_mouse_and_window_position`, which this review had to trace manually while checking VAL-CONTROLS-008.",
+      "evidence": "`.factory/library/windows.md` notes the pitfall broadly, while `src-tauri/src/utils/window.rs:199` still uses `app.get_webview_window(\"main\")`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the feature handoff, transcript skeleton, skill, and commit `6212d964b48f8eafb7b5a8928fc4982aac2ec94f`. The shell/control gating changes satisfy the non-user and pending/error bootstrap requirements, but the feature does not fully meet VAL-CONTROLS-008 because `get_mouse_and_window_position` still targets the literal main window handle, so the report is a fail."
+}

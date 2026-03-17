@@ -1,0 +1,39 @@
+{
+  "featureId": "homepage-effect-window-routing",
+  "reviewedAt": "2026-03-17T13:42:39Z",
+  "commitId": "761067974b5543c036d7198c4563d2042761dbde",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The feature correctly centralizes homepage prewarm target selection behind the same resolved main-window identity helper used by bootstrap rendering, but it regresses the existing no-prewarm contract by issuing a backend prewarm call during primary-main bootstrap and leaves contradictory test coverage in place.",
+    "issues": [
+      {
+        "file": "src/flow/bootstrap/index.ts",
+        "line": 42,
+        "severity": "blocking",
+        "description": "`useAppBootstrap` now calls `crab.prewarmWindow` whenever `getHomepagePrewarmTarget(nextWindow)` resolves. This reintroduces a homepage-triggered prewarm side effect during bootstrap, contradicting the feature tests and the surrounding contract that startup correctness must not depend on automatic prewarm timing. The same feature still ships `shouldRequestWindowPrewarm` assertions expecting no hidden-window preparation, so the implementation and test contract diverge."
+      },
+      {
+        "file": "tests/bootstrap.logic.test.ts",
+        "line": 286,
+        "severity": "non_blocking",
+        "description": "The existing `shouldRequestWindowPrewarm` tests still assert that no hidden-window preparation is ever requested, even though the feature now intentionally returns a homepage prewarm target for the true primary main window. The suite passes only because `shouldRequestWindowPrewarm` is no longer exercised by bootstrap, leaving stale coverage that can mislead future changes."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The worker skill says to write failing tests first and manually verify the Tauri window surface, but this feature only added logic-unit coverage and no desktop-surface verification. The handoff marks the procedure as followed even though interactive verification did not happen, and the mission guidance already defers that manual pass.",
+      "evidence": "window-controls-worker/SKILL.md steps 3 and 8 require failing tests first and desktop verification; worker transcript shows only Bun/typecheck/lint commands and the handoff has interactiveChecks: [] with skillFeedback.followedProcedure: true."
+    },
+    {
+      "area": "conventions",
+      "observation": "The repo now contains two overlapping homepage-prewarm decision surfaces: `getHomepagePrewarmTarget` drives real bootstrap behavior while `shouldRequestWindowPrewarm` and its tests still encode the older never-prewarm rule. The mission docs mention authoritative identity resolution but do not spell out which exported helper is the single supported API for homepage prewarm decisions.",
+      "evidence": "src/flow/bootstrap/logic.ts:65-97 exports both getHomepagePrewarmTarget and shouldRequestWindowPrewarm; tests/bootstrap.logic.test.ts:226-318 still centers assertions on shouldRequestWindowPrewarm even though src/flow/bootstrap/index.ts:40-42 now uses getHomepagePrewarmTarget directly."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Review failed: homepage routing alignment is mostly correct, but the feature reintroduces a bootstrap prewarm side effect that conflicts with the feature\u2019s own no-prewarm assertions and leaves stale test coverage around the legacy helper."
+}
