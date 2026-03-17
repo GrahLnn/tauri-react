@@ -1,0 +1,62 @@
+{
+  "milestone": "window-lifecycle-core",
+  "round": 1,
+  "status": "pass",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "bun test",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "bun run typecheck",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    "rust-check": {
+      "passed": true,
+      "command": "cargo check --manifest-path \"C:\\Users\\admin\\tauri-react\\src-tauri\\Cargo.toml\"",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "failedFeatures": []
+  },
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "skills",
+      "suggestion": "Update `window-controls-worker` guidance so startup-stabilization and bootstrap/titlebar tasks explicitly call out early platform-resolution and `@tauri-apps/plugin-os` crashes as a first diagnostic path, and clarify that process/log verification can satisfy narrowly scoped launch-stabilization work before later desktop validators take over.",
+      "evidence": "`validation-surface-launch-stabilization` and `renderer-role-and-control-binding` both reported justified deviations from manual desktop verification because startup was blocked by early `@tauri-apps/plugin-os` access before Tauri OS internals were ready.",
+      "isSystemic": true
+    },
+    {
+      "target": "skills",
+      "suggestion": "Update `window-lifecycle-worker` guidance to explicitly allow automated-only completion for backend-only close-accounting work when Rust lifecycle regressions fully cover the behavior and desktop-surface validation is delegated to dedicated validation features.",
+      "evidence": "`window-close-accounting` completed with focused Rust regression coverage and a justified deviation from the skill's blanket manual desktop-validation step.",
+      "isSystemic": false
+    },
+    {
+      "target": "AGENTS.md",
+      "suggestion": "Add explicit Windows mission guidance that `.factory/init.sh` should be read and translated to Windows-native commands rather than executed directly when it is a POSIX shell script.",
+      "evidence": "`validation-surface-launch-stabilization` attempted to execute `.factory/init.sh` under PowerShell before falling back to reading it; the worker handoff recorded this as a preventable procedure deviation.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Document the recurring `@tauri-apps/plugin-os` startup failure in mission shared-state docs.",
+      "reason": "recommend-to-orchestrator instead of apply-now because it affects mission/library guidance outside this validator's additive factual updates and duplicates the broader skill-guidance recommendation."
+    }
+  ],
+  "previousRound": null
+}

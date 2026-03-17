@@ -1,0 +1,357 @@
+{
+  "groupId": "desktop-launch-blocked",
+  "testedAt": "2026-03-17T00:00:00Z",
+  "isolation": {
+    "surface": "tauri-desktop",
+    "platform": "windows",
+    "devServer": "http://localhost:3000",
+    "evidenceDir": "C:\\Users\\admin\\.factory\\missions\\f4a6a526-2759-453f-b519-7e5aedca3301\\evidence\\window-lifecycle-core\\desktop-launch-blocked",
+    "notes": "Single-validator desktop run; localhost used only as readiness evidence."
+  },
+  "toolsUsed": [
+    "Read",
+    "LS",
+    "Glob",
+    "Grep"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-LIFECYCLE-001",
+      "title": "Visible application windows always resolve to a user-window identity",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Inspect validation contract and startup logs for a usable Tauri desktop window",
+          "expected": "A visible desktop window can be observed and classified on the real Tauri surface",
+          "observed": "Startup logs show the renderer crashes before an interactive desktop window can be inspected"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 reached readiness only; not an authoritative validation surface"
+      },
+      "issues": "Blocked because no interactive desktop window became available to verify visible-window identity."
+    },
+    {
+      "id": "VAL-LIFECYCLE-002",
+      "title": "Application startup exposes exactly one interactive primary main window",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Inspect desktop launch evidence",
+          "expected": "Exactly one interactive primary main window is visible on startup",
+          "observed": "Renderer crash prevents confirming any interactive primary main window on the Tauri desktop surface"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked by startup crash before desktop-surface startup observation."
+    },
+    {
+      "id": "VAL-LIFECYCLE-003",
+      "title": "Opening a new window creates exactly one additional interactive user window",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess whether the app reaches an interactive desktop state for the new-window flow",
+          "expected": "The user-facing new-window control can be exercised on the Tauri desktop surface",
+          "observed": "Launch never reaches an interactive state because the renderer crashes during startup"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because the new-window user flow cannot be executed on desktop."
+    },
+    {
+      "id": "VAL-LIFECYCLE-004",
+      "title": "Hidden or support windows cannot recursively trigger more window preparation",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess repeated desktop window flows for support/prewarm behavior",
+          "expected": "Repeated user-visible creation flows can be observed on desktop without recursive preparation",
+          "observed": "No interactive desktop flow is available because the renderer crashes first"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because repeated desktop open-window behavior cannot be observed."
+    },
+    {
+      "id": "VAL-LIFECYCLE-005",
+      "title": "Closing one of multiple user windows does not exit the application",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess whether multiple interactive user windows can be created on desktop",
+          "expected": "Two visible user windows are opened so one can be closed while the app remains alive",
+          "observed": "The renderer crash prevents creating any stable interactive desktop window"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because multi-window desktop validation cannot start."
+    },
+    {
+      "id": "VAL-LIFECYCLE-006",
+      "title": "Closing the last user window exits cleanly without leaving ghost windows",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess last-window desktop shutdown flow availability",
+          "expected": "A stable final visible user window can be closed and app exit observed on desktop",
+          "observed": "No stable desktop window exists because startup crashes in the renderer"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because shutdown behavior cannot be tested without an interactive desktop window."
+    },
+    {
+      "id": "VAL-LIFECYCLE-007",
+      "title": "Closing a hidden or support window never counts as closing a user window",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess hidden/support-window close-accounting validation path on desktop",
+          "expected": "Desktop lifecycle state can be observed while a hidden/support window closes",
+          "observed": "Desktop lifecycle validation cannot begin because the renderer crashes during startup"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because no desktop lifecycle interactions are available."
+    },
+    {
+      "id": "VAL-CONTROLS-001",
+      "title": "Bootstrap resolves window role before window-specific startup side effects run",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess bootstrap behavior on desktop startup",
+          "expected": "Renderer reaches the point where resolved window role and startup side effects can be observed",
+          "observed": "Renderer crashes before window-role behavior can be validated"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked by startup crash before bootstrap role resolution is observable."
+    },
+    {
+      "id": "VAL-CONTROLS-002",
+      "title": "Hidden or non-user windows do not render the full application shell",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess rendered shell visibility on desktop",
+          "expected": "Rendered desktop shell can be inspected for hidden/non-user window behavior",
+          "observed": "The shell never stabilizes on the desktop surface because the renderer crashes"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because a valid desktop shell never renders to completion."
+    },
+    {
+      "id": "VAL-CONTROLS-003",
+      "title": "Window controls act on the owning window only",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess whether desktop titlebar controls can be exercised",
+          "expected": "Interactive desktop controls can be clicked on one window and compared against another window",
+          "observed": "No interactive desktop window becomes available because the renderer crashes first"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because per-window control behavior cannot be observed on desktop."
+    },
+    {
+      "id": "VAL-CONTROLS-004",
+      "title": "Platform-specific control semantics stay correct",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess native Windows control behavior on desktop",
+          "expected": "Minimize, maximize/restore, and close can be exercised on the active desktop window",
+          "observed": "Renderer crash prevents reaching a usable desktop titlebar/control surface"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because native control interactions cannot be tested."
+    },
+    {
+      "id": "VAL-CONTROLS-005",
+      "title": "Drag regions stay draggable without swallowing explicit button actions",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess desktop drag-region interactivity",
+          "expected": "The live titlebar drag region can be dragged while buttons remain clickable",
+          "observed": "No usable desktop titlebar is available because the renderer crashes during startup"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because drag-region behavior cannot be exercised on the real surface."
+    },
+    {
+      "id": "VAL-CONTROLS-006",
+      "title": "Maximize state indicators stay synchronized with native window state",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess maximize-state UI synchronization on desktop",
+          "expected": "The window's maximize indicator can be compared against native window state on live desktop windows",
+          "observed": "The required desktop UI never becomes interactive due to the startup crash"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because maximize-state synchronization cannot be observed on desktop."
+    },
+    {
+      "id": "VAL-CROSS-001",
+      "title": "Startup does not surface ghost or prewarm UI",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess startup surface for ghost or prewarm UI",
+          "expected": "A stable desktop startup sequence can be observed for ghost/duplicate/prewarm UI",
+          "observed": "Startup crashes before the desktop surface can be inspected authoritatively"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because startup UI on the real desktop surface never stabilizes."
+    },
+    {
+      "id": "VAL-CROSS-003",
+      "title": "Repeated open-window actions do not accumulate ghost windows",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess repeated desktop open-window flow availability",
+          "expected": "Repeated open-window actions can be run on the live desktop app to inspect for ghost windows",
+          "observed": "The desktop app never reaches an interactive state due to the renderer crash"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because repeated open-window interactions cannot be performed."
+    },
+    {
+      "id": "VAL-CROSS-004",
+      "title": "Last-window shutdown cleans up lifecycle support state",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Assess shutdown-and-relaunch desktop flow availability",
+          "expected": "The final-window shutdown and next launch can be observed on the real desktop surface",
+          "observed": "The first launch crashes before any authoritative shutdown/relaunch validation can begin"
+        }
+      ],
+      "evidence": {
+        "screenshots": [],
+        "consoleErrors": "Uncaught TypeError: Cannot read properties of undefined (reading 'platform') at @tauri-apps/plugin-os/dist-js/index.js:35:0",
+        "network": "http://localhost:3000 ready only"
+      },
+      "issues": "Blocked because shutdown cleanup and relaunch cannot be validated on desktop."
+    }
+  ],
+  "frictions": [
+    {
+      "description": "The authoritative validation surface is blocked before interaction because the Tauri renderer crashes while resolving platform state.",
+      "resolved": false,
+      "resolution": null,
+      "affectedAssertions": [
+        "VAL-LIFECYCLE-001",
+        "VAL-LIFECYCLE-002",
+        "VAL-LIFECYCLE-003",
+        "VAL-LIFECYCLE-004",
+        "VAL-LIFECYCLE-005",
+        "VAL-LIFECYCLE-006",
+        "VAL-LIFECYCLE-007",
+        "VAL-CONTROLS-001",
+        "VAL-CONTROLS-002",
+        "VAL-CONTROLS-003",
+        "VAL-CONTROLS-004",
+        "VAL-CONTROLS-005",
+        "VAL-CONTROLS-006",
+        "VAL-CROSS-001",
+        "VAL-CROSS-003",
+        "VAL-CROSS-004"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "description": "Real desktop validation is blocked on Windows because the Tauri renderer crashes during startup before the desktop surface becomes reliably interactive. The failure is `Uncaught TypeError: Cannot read properties of undefined (reading 'platform')` from `@tauri-apps/plugin-os/dist-js/index.js:35:0`, evidenced in `C:\\Users\\admin\\tauri-react\\.tmp\\tauri-dev.err.log`.",
+      "affectedAssertions": [
+        "VAL-LIFECYCLE-001",
+        "VAL-LIFECYCLE-002",
+        "VAL-LIFECYCLE-003",
+        "VAL-LIFECYCLE-004",
+        "VAL-LIFECYCLE-005",
+        "VAL-LIFECYCLE-006",
+        "VAL-LIFECYCLE-007",
+        "VAL-CONTROLS-001",
+        "VAL-CONTROLS-002",
+        "VAL-CONTROLS-003",
+        "VAL-CONTROLS-004",
+        "VAL-CONTROLS-005",
+        "VAL-CONTROLS-006",
+        "VAL-CROSS-001",
+        "VAL-CROSS-003",
+        "VAL-CROSS-004"
+      ],
+      "quickFixAttempted": "Inspected repo guidance, startup logs, and startup code paths; localhost readiness exists but cannot substitute for the required Tauri desktop surface."
+    }
+  ],
+  "summary": "Tested 16 assertions: 0 passed, 0 failed, 16 blocked by the Tauri desktop startup crash in @tauri-apps/plugin-os before the real validation surface became interactive."
+}
