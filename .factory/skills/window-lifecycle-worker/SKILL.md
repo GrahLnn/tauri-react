@@ -23,7 +23,7 @@ Use this skill for backend-heavy or cross-layer features that change window iden
    - `cargo check --manifest-path src-tauri/Cargo.toml`
    - `bun test`
    - `bun run typecheck` when TS bindings or frontend call sites changed
-8. Manually verify the real Tauri surface with `bun tauri dev` for the feature’s flows. Capture startup, open-window, close, reopen, and shutdown observations as applicable.
+8. Manually verify the real Tauri surface with `bun tauri dev` for the feature’s flows. If optional dev overlays or instrumentation obscure the real app shell, disable or gate them for validation runs only before collecting evidence. Treat `http://localhost:3000` as a server-readiness check only, not as the acceptance surface; capture startup, open-window, close, reopen, and shutdown observations from the actual desktop window.
 9. Before handoff, summarize exactly which lifecycle states changed, which assertions are now satisfiable, and any residual risks.
 
 ## Example Handoff

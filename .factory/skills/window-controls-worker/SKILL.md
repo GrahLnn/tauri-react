@@ -25,7 +25,8 @@ Use this skill for frontend features that change bootstrap role resolution, app-
    - `bun run lint`
    - `cargo check --manifest-path src-tauri/Cargo.toml` if command bindings or Rust-side metadata changed
 8. Manually verify the real Tauri window surface with at least two visible windows. Exercise close, minimize, maximize/fullscreen, drag, and reopen flows relevant to the feature.
-9. In the handoff, be explicit about which controls were tested in which window and what proved they stayed window-local.
+9. If `bun tauri dev --no-watch` exits immediately, capture `.tmp/tauri-dev.log` and `.tmp/tauri-dev.err.log`, fix the startup blocker first, and only then continue to user-surface validation.
+10. In the handoff, be explicit about which controls were tested in which window and what proved they stayed window-local.
 
 ## Example Handoff
 

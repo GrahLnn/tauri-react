@@ -29,5 +29,8 @@ Validation surface findings and runtime testing guidance.
 ## Runtime Notes
 
 - Check ownership of `http://localhost:3000` before assuming a fresh dev stack.
+- Validation runs should disable optional dev overlays when they obscure the real app shell; real-window evidence must come from the actual Tauri-visible surface, not overlay UI.
+- `http://localhost:3000` is a readiness endpoint for this mission, not the authoritative user-testing surface.
+- If `bun tauri dev --no-watch` exits early, inspect `.tmp/tauri-dev.log` and `.tmp/tauri-dev.err.log` before concluding that desktop validation is impossible.
 - `bun run lint` currently exits successfully with warnings; treat unrelated warnings as background noise unless your feature changes them.
 - If the redesign removes support/prewarm windows entirely, that is an acceptable and preferred outcome as long as user-visible flows remain correct.
