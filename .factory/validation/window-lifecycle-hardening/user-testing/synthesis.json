@@ -1,0 +1,54 @@
+{
+  "milestone": "window-lifecycle-hardening",
+  "round": 1,
+  "status": "fail",
+  "assertionsSummary": {
+    "total": 4,
+    "passed": 0,
+    "failed": 0,
+    "blocked": 4
+  },
+  "passedAssertions": [],
+  "failedAssertions": [],
+  "blockedAssertions": [
+    {
+      "id": "VAL-CONTROLS-006",
+      "blockedBy": "Mission AGENTS.md defers real desktop multi-window control validation to the user, so automation must not test native window control ownership on the Tauri desktop surface."
+    },
+    {
+      "id": "VAL-CONTROLS-007",
+      "blockedBy": "Supporting Bun regressions exist for focus/maximize ownership, but final contract evidence still requires user-supplied desktop validation that automation cannot perform in this mission revision."
+    },
+    {
+      "id": "VAL-CROSS-004",
+      "blockedBy": "Open-close-reopen freshness must be confirmed on the real desktop surface by the user; automated validators are explicitly disallowed from collecting Manual(...) evidence here."
+    },
+    {
+      "id": "VAL-CROSS-005",
+      "blockedBy": "Multi-window isolation with prewarm/discard/control activity remains a manual desktop checklist item per mission guidance and could not be automated."
+    }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Documented that window-lifecycle-hardening user-testing remains manual-only for VAL-CONTROLS-006/007 and VAL-CROSS-004/005, and that automated evidence is supporting-only.",
+      "source": "flow-report"
+    }
+  ],
+  "previousRound": null,
+  "notes": {
+    "manualChecklistRequired": true,
+    "supportingEvidence": [
+      {
+        "source": "handoff",
+        "path": "C:\\Users\\admin\\.factory\\missions\\b248e737-65f6-4815-8f8c-0fd1b1e3656b\\handoffs\\2026-03-17T15-30-42-305Z__window-control-reopen-freshness-regressions__5dd865d2-434b-4ad2-8cb1-d7b6a75d36e3.json",
+        "summary": "Same-label reopen regression coverage passed in bun tests for focus/maximize ownership refresh."
+      },
+      {
+        "source": "handoff",
+        "path": "C:\\Users\\admin\\.factory\\missions\\b248e737-65f6-4815-8f8c-0fd1b1e3656b\\handoffs\\2026-03-17T15-38-29-005Z__scrutiny-validator-window-lifecycle-hardening__b890c3f3-d5ff-4f80-b40b-98391f1e85b3.json",
+        "summary": "Scrutiny rerun passed bun test, typecheck, and lint for the hardening milestone after the reopen-freshness fix."
+      }
+    ]
+  }
+}

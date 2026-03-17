@@ -29,6 +29,8 @@ Validation surface findings and runtime testing guidance.
 ## Runtime Notes
 - Desktop unsafe validation for the typed-prewarm mission is currently deferred/manual; implementation workers should still preserve desktop-surface correctness assumptions.
 - Manual desktop validation for this mission should include homepage-triggered prewarm, discard-prewarm, discard-then-open, and open-close-reopen flows in addition to baseline startup/open/close checks.
+- For `window-lifecycle-hardening`, final contract coverage is limited to manual desktop checks for `VAL-CONTROLS-006`, `VAL-CONTROLS-007`, `VAL-CROSS-004`, and `VAL-CROSS-005`; automated evidence from Bun/typecheck/lint and scrutiny handoffs is supporting evidence only and must not be treated as final user-testing proof.
+- No automated flow validators should be spawned for `window-lifecycle-hardening` on this mission revision because Mission AGENTS.md explicitly defers desktop-surface evidence to the user.
 
 - Check ownership of `http://localhost:3000` before assuming a fresh dev stack.
 - Validation runs should disable optional dev overlays when they obscure the real app shell; real-window evidence must come from the actual Tauri-visible surface, not overlay UI.
