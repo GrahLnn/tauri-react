@@ -1,21 +1,21 @@
 {
   "featureId": "lifecycle-identity-and-close-accounting-hardening",
-  "reviewedAt": "2026-03-17T13:42:11Z",
-  "commitId": "ab824247ba905f12e7114aaa26cd0180e634ce01",
+  "reviewedAt": "2026-03-17T14:23:47Z",
+  "commitId": "06050fbfba23f2a86d0e66edd011bf4734d0c34e",
   "transcriptSkeletonReviewed": true,
   "diffReviewed": true,
   "status": "pass",
   "codeReview": {
-    "summary": "The feature centralizes lifecycle identity classification behind a single helper and tightens close-accounting to ignore non-user windows and only exit after the last visible user window closes. The Rust regression coverage directly exercises the claimed label-classification, reopen, and close-accounting invariants, and I did not find contract-breaking issues in the reviewed scope.",
+    "summary": "Current implementation still satisfies the lifecycle identity and close-accounting contract: a single Rust classification helper drives WindowKindInfo and user-window checks, and exit decisions only trigger after the closing label is a visible user window and the post-close visible user-window count reaches zero. The reviewed Rust regression coverage directly exercises startup, repeated opens, reopen sequences, label classification, and last-user-window exit behavior, and I did not find contract-breaking issues in the current code.",
     "issues": []
   },
   "sharedStateObservations": [
     {
-      "area": "skills",
-      "observation": "The window-lifecycle-worker skill still mandates a manual \bun tauri dev verification step, but this mission explicitly defers desktop unsafe validation to a later manual pass. That requirement does not match current mission reality for code-reviewable lifecycle features.",
-      "evidence": "C:\\Users\\admin\\tauri-react\\.factory\\skills\\window-lifecycle-worker\\SKILL.md step 8 requires manual Tauri verification, while C:\\Users\\admin\\.factory\\missions\\b248e737-65f6-4815-8f8c-0fd1b1e3656b\\mission.md and AGENTS.md state desktop unsafe validation is deferred/manual for this mission revision."
+      "area": "review-state",
+      "observation": "The previously generated review JSON for this feature was stale: it referenced commit ab824247ba905f12e7114aaa26cd0180e634ce01 even though the current repository HEAD is 06050fbfba23f2a86d0e66edd011bf4734d0c34e. This refresh aligns the scrutiny artifact with the current implementation state being reviewed.",
+      "evidence": "Existing file C:\\Users\\admin\\tauri-react\\.factory\\validation\\window-lifecycle-core\\scrutiny\\reviews\\lifecycle-identity-and-close-accounting-hardening.json before refresh listed commitId ab824247ba905f12e7114aaa26cd0180e634ce01, while git -C C:\\Users\\admin\\tauri-react rev-parse HEAD returned 06050fbfba23f2a86d0e66edd011bf4734d0c34e during this review."
     }
   ],
   "addressesFailureFrom": null,
-  "summary": "Pass. Reviewed the worker transcript skeleton, handoff, and commit \u0007b824247ba905f12e7114aaa26cd0180e634ce01. The implementation satisfies the scoped lifecycle identity and close-accounting contracts in code: one authoritative label classification path now drives both WindowKindInfo and user-window checks, and exit decisions are based on post-close visible user-window counts. No blocking or non-blocking code issues found in the reviewed feature."
+  "summary": "Pass. Reviewed the worker transcript skeleton/handoff for session de6cba55-2762-47de-a9dc-77838b90e0ac, the current src-tauri/src/utils/window.rs lifecycle implementation, and fresh validator evidence from cargo test window::tests plus bun test. The current code still preserves one authoritative primary main classification, keeps support/prewarm labels out of visible user-window identity, and bases exit decisions only on visible user windows."
 }

@@ -1,21 +1,15 @@
 {
   "featureId": "bootstrap-shell-gating-hardening",
-  "reviewedAt": "2026-03-17T14:08:20Z",
+  "reviewedAt": "2026-03-17T14:20:51Z",
   "commitId": "bf8286fcac2bb03a09a8078e175a1d4905a5a83c",
   "transcriptSkeletonReviewed": true,
   "diffReviewed": true,
   "status": "pass",
   "codeReview": {
-    "summary": "The current implementation satisfies the reviewed feature contract: bootstrap pending/error states keep the app usable while withholding ownership-sensitive controls, non-user windows no longer mount the interactive shell or titlebar portals, and the remaining active-window command hotspot now resolves against the caller-owned WebviewWindow instead of the literal main handle.",
+    "summary": "Current implementation completes the remaining wrong-window ownership hardening by injecting the caller WebviewWindow into get_mouse_and_window_position, and the existing bootstrap shell gating logic still keeps pending/error fallback usable while blocking ready non-user windows from shell/control mounting.",
     "issues": []
   },
-  "sharedStateObservations": [
-    {
-      "area": "skills",
-      "observation": "The worker reported skipping desktop multi-window verification as a procedure deviation, but the mission AGENTS and the skill both already allow code-and-validator evidence when desktop validation is explicitly deferred. The skill wording still made the worker record this as a deviation.",
-      "evidence": "Mission AGENTS.md says desktop unsafe validation is deferred/manual; .factory/skills/window-controls-worker/SKILL.md step 8 says to complete strongest code-and-validator evidence when deferred; handoff skillFeedback for worker session 481d3dbc-0268-4135-883b-d7f2eaa375fd still marks step 8 as a deviation."
-    }
-  ],
+  "sharedStateObservations": [],
   "addressesFailureFrom": null,
-  "summary": "Reviewed the rerun for bootstrap-shell-gating-hardening from current implementation state only. Diff, handoff, transcript skeleton, and relevant code paths all support a pass for VAL-CONTROLS-004, VAL-CONTROLS-005, and VAL-CONTROLS-008."
+  "summary": "Pass. The reviewed commit fixes the remaining caller-window ownership hotspot for mouse capture, and the current bootstrap/App/index gating code still satisfies the feature contract for pending/error fallback usability and non-user shell/control blocking. No blocking or non-blocking issues found in the current implementation."
 }

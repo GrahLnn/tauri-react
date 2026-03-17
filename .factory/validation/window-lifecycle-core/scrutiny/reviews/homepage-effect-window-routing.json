@@ -1,40 +1,15 @@
 {
   "featureId": "homepage-effect-window-routing",
-  "reviewedAt": "2026-03-17T14:08:24Z",
-  "commitId": "c9ae427cea01c7fb5f375f64a26af3f1d8028779",
+  "reviewedAt": "2026-03-17T14:20:40.311088+00:00",
+  "commitId": "06050fbfba23f2a86d0e66edd011bf4734d0c34e",
   "transcriptSkeletonReviewed": true,
   "diffReviewed": true,
-  "status": "fail",
+  "status": "pass",
   "codeReview": {
-    "summary": "The current implementation does not satisfy the feature contract: startup still automatically calls prewarmWindow for resolved Main user windows, and homepage target resolution is no longer confined to the true primary main window.",
-    "issues": [
-      {
-        "file": "src/flow/bootstrap/index.ts",
-        "line": 42,
-        "severity": "blocking",
-        "description": "useAppBootstrap still invokes crab.prewarmWindow(homepagePrewarmTarget) during startup whenever shouldRequestWindowPrewarm(nextWindow) is true. The feature explicitly required restoring the no-automatic-prewarm contract unless contract/tests/artifacts were updated together, so automatic startup prewarm remains out of contract and fails the requested review scope."
-      },
-      {
-        "file": "src/flow/bootstrap/logic.ts",
-        "line": 66,
-        "severity": "blocking",
-        "description": "getHomepagePrewarmTarget now returns resolveMainRouteWindow(meta) without checking isPrimaryMain, so secondary visible main windows resolve to the same homepage prewarm target as the primary window. That lets primary-main-only startup behavior escape to non-primary windows, violating the feature requirement and VAL-CONTROLS-003."
-      },
-      {
-        "file": "tests/bootstrap.logic.test.ts",
-        "line": 216,
-        "severity": "blocking",
-        "description": "The tests now assert that getHomepagePrewarmTarget returns Main even when isPrimaryMain is false, codifying the wrong behavior instead of guarding the contract. The surrounding test name still says prewarm stays disabled until a true primary main window resolves, so the assertions no longer verify the intended requirement."
-      }
-    ]
+    "summary": "The feature now cleanly separates general main-window rendering from homepage-only eligibility: App rendering still follows the shared main-route resolver, homepage targeting is restricted to the true primary main window, and startup no longer auto-prewarms any window.",
+    "issues": []
   },
-  "sharedStateObservations": [
-    {
-      "area": "skills",
-      "observation": "The window-controls-worker skill mentions that secondary windows must not run primary-main-only startup work, but the current implementation and tests still drifted into allowing secondary main windows to stay homepage-prewarm eligible. The skill may need a more explicit reminder that shared route resolution and startup-side-effect gating are separate checks.",
-      "evidence": "window-controls-worker SKILL.md step 5 versus tests/bootstrap.logic.test.ts:216 and src/flow/bootstrap/logic.ts:66, where non-primary main windows remain eligible for the homepage prewarm target."
-    }
-  ],
+  "sharedStateObservations": [],
   "addressesFailureFrom": null,
-  "summary": "Fresh review of the current implementation fails: homepage routing now shares App's resolver, but startup still auto-prewarms and the target resolver no longer enforces primary-main-only scoping, so the feature does not satisfy its contract or the cited validation controls."
+  "summary": "Reviewed the fresh homepage-effect-window-routing implementation and current worker evidence only. The current code satisfies the feature contract: homepage effect routing derives from the same authoritative main-route resolver used by App/bootstrap, secondary main windows remain renderable but are excluded from homepage-only side effects, and automatic startup prewarm remains disabled."
 }
