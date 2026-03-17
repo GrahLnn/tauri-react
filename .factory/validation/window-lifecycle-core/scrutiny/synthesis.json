@@ -1,6 +1,6 @@
 {
   "milestone": "window-lifecycle-core",
-  "round": 2,
+  "round": 3,
   "status": "fail",
   "validatorsRun": {
     "test": { "passed": true, "command": "bun test", "exitCode": 0 },
@@ -11,28 +11,22 @@
   "reviewsSummary": {
     "total": 4,
     "passed": 1,
-    "failed": 3,
+    "failed": 2,
     "failedFeatures": [
       "typed-prewarm-discard-commands",
-      "homepage-effect-window-routing",
-      "bootstrap-shell-gating-hardening"
+      "homepage-effect-window-routing"
     ]
   },
   "blockingIssues": [
     {
       "featureId": "typed-prewarm-discard-commands",
       "severity": "blocking",
-      "description": "`src-tauri/src/utils/window.rs` exposes typed prewarm/discard commands but only mutates an in-memory enum set; it does not create, track, or dispose actual prepared backend window state, so discard/non-resurrection guarantees remain unimplemented for VAL-LIFECYCLE-007 and VAL-CROSS-003."
+      "description": "`src-tauri/src/utils/window.rs` now creates typed prepared backend state, but `discard_prewarm_window` only clears inventory and does not close any existing hidden prepared webview. Because later prewarm/open flows reuse the same `main-prewarm` label, discarded hidden state can survive and be reused, so VAL-LIFECYCLE-007 and VAL-CROSS-003 remain unmet."
     },
     {
       "featureId": "homepage-effect-window-routing",
       "severity": "blocking",
-      "description": "`src/flow/bootstrap/index.ts` reintroduces a bootstrap-time `crab.prewarmWindow(...)` side effect for the resolved primary main window, conflicting with the no-automatic-prewarm contract and the feature's own retained no-prewarm assertions."
-    },
-    {
-      "featureId": "bootstrap-shell-gating-hardening",
-      "severity": "blocking",
-      "description": "`src-tauri/src/utils/window.rs:get_mouse_and_window_position` still hardcodes `app.get_webview_window(\"main\")`, so commands invoked from secondary visible windows can still target the wrong native window, violating VAL-CONTROLS-008."
+      "description": "`src/flow/bootstrap/index.ts` still performs bootstrap-time `crab.prewarmWindow(...)`, and `src/flow/bootstrap/logic.ts` no longer restricts homepage prewarm targeting to the true primary main window. This conflicts with the feature's no-automatic-prewarm contract and leaks primary-only startup behavior to secondary main windows."
     }
   ],
   "appliedUpdates": [],
@@ -40,30 +34,30 @@
     {
       "target": "skills",
       "suggestion": "Update `window-controls-worker` guidance so it explicitly distinguishes deferred-manual desktop-validation missions from feature-local code validation, and require workers to mark procedure deviations accurately when only automated checks are possible.",
-      "evidence": "Both `homepage-effect-window-routing` and `bootstrap-shell-gating-hardening` reviews found the skill's mandatory manual-desktop step mismatched this mission's deferred desktop validation, and one handoff incorrectly claimed the procedure was fully followed without interactive checks.",
+      "evidence": "The fresh `bootstrap-shell-gating-hardening` review passed the code contract but still found the worker marked deferred desktop validation as a procedure deviation, while `homepage-effect-window-routing` also drifted on primary-only startup semantics. The skill wording still leaves room for confusion about when desktop validation is deferred and how startup-side-effect scoping should be enforced in code review.",
       "isSystemic": true
     },
     {
       "target": "skills",
       "suggestion": "Update `window-lifecycle-worker` guidance to acknowledge backend contract refactors where establishing a minimal seam before meaningful failing tests is justified, instead of enforcing a rigid tests-first sequence that workers must immediately violate.",
-      "evidence": "The `typed-prewarm-discard-commands` review found the worker had to deviate from tests-first because the previous code exposed no real prewarm/discard seam to test until the state shape was introduced.",
+      "evidence": "The fresh `typed-prewarm-discard-commands` review still found the worker had to shape a real prepared-state seam before meaningful tests existed, and the resulting tests remained too helper-focused to catch hidden webview cleanup gaps.",
       "isSystemic": false
     },
     {
       "target": "AGENTS.md",
       "suggestion": "Add mission guidance that validation or review claims must stay aligned with the implemented contract and retained tests; if a feature changes the intended behavior (such as homepage prewarm), stale helper APIs/tests must be updated or removed in the same change.",
-      "evidence": "The `homepage-effect-window-routing` review found implementation behavior diverged from retained `shouldRequestWindowPrewarm` test assertions, allowing contradictory contract signals to coexist.",
+      "evidence": "The fresh `homepage-effect-window-routing` review found implementation behavior, helper naming, and tests still send contradictory signals: bootstrap auto-prewarms during startup, `shouldRequestWindowPrewarm` remains false, and tests simultaneously describe primary-only gating while asserting secondary windows are eligible targets.",
       "isSystemic": false
     }
   ],
   "rejectedObservations": [
     {
-      "observation": "Document the remaining `get_mouse_and_window_position` hotspot in `.factory/library/windows.md`.",
-      "reason": "Rejected for now because this synthesis found blocking product issues but did not apply repository updates; the observation is specific to a fix feature rather than a broadly reusable validated fact to add atomically during failed scrutiny."
+      "observation": "Document the remaining prepared-window discard pitfall in `.factory/library/windows.md` or `.factory/library/architecture.md`.",
+      "reason": "Rejected for now because scrutiny is failing and the current implementation is still incorrect; documenting the exact incomplete discard/prewarm design as shared knowledge would risk legitimizing a contract-breaking path before it is fixed."
     },
     {
-      "observation": "Record the synthetic-inventory prewarm design in library docs.",
-      "reason": "Rejected because the review concluded that design is incomplete relative to the contract, so documenting it as shared knowledge would legitimize a failing implementation."
+      "observation": "Apply a services/library update describing homepage prewarm rules for secondary windows.",
+      "reason": "Rejected because the current bootstrap/homepage contract is internally inconsistent in code and tests, so there is no stable factual rule to publish until the implementation is corrected."
     }
   ],
   "previousRound": "C:\\Users\\admin\\tauri-react\\.factory\\validation\\window-lifecycle-core\\scrutiny\\synthesis.json"

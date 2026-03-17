@@ -1,34 +1,45 @@
 {
   "featureId": "typed-prewarm-discard-commands",
-  "reviewedAt": "2026-03-17T13:42:45Z",
-  "commitId": "b6f0d74",
+  "reviewedAt": "2026-03-17T14:09:48Z",
+  "commitId": "ccb5f78",
   "transcriptSkeletonReviewed": true,
   "diffReviewed": true,
   "status": "fail",
   "codeReview": {
-    "summary": "The feature adds typed Specta-backed prewarm/discard commands and removes automatic bootstrap timing dependence, but the backend never ties the prepared inventory to actual hidden/prepared window instances. discard_prewarm_window only mutates an in-memory set, so any already-created prepared window would remain alive and could still surface through later lifecycle flows, leaving VAL-LIFECYCLE-007 and VAL-CROSS-003 unproven in code.",
+    "summary": "The feature correctly moved prewarm/discard to typed specta commands backed by authoritative backend state, but the current implementation does not fully dispose of discarded or stale prepared windows. Prewarmed webviews can remain alive after discard, and later prewarm/open flows can reuse the same main-prewarm label, which risks resurrecting the discarded hidden instance in later lifecycle enumeration/open sequences instead of guaranteeing fresh state.",
     "issues": [
       {
         "file": "src-tauri/src/utils/window.rs",
-        "line": 381,
+        "line": 433,
         "severity": "blocking",
-        "description": "prewarm_window only records the enum in prepared_window_inventory and does not create, track, or hide any prepared backend window/resource. Because the feature contract is specifically about backend prewarm/discard commands and later open-window reuse, the implementation changes the API surface but not the actual window lifecycle behavior those commands are supposed to govern."
+        "description": "discard_prewarm_window only removes the in-memory inventory entry and never closes an existing hidden prepared webview. If prewarm_window already built main-prewarm, discard leaves that backend window alive, so the discarded prepared resource can still exist in the app and be reused by a later prewarm_window call or affect lifecycle enumeration outside the inventory map."
       },
       {
         "file": "src-tauri/src/utils/window.rs",
-        "line": 387,
+        "line": 419,
         "severity": "blocking",
-        "description": "discard_prewarm_window removes an enum entry from the in-memory set, but it does not dispose of any potentially prepared window instance or other backend state. If a prewarmed hidden window existed, discard would leave that native state intact, so discarded prepared state could still participate in later enumeration/open flows. This falls short of the requirement that discarded prepared state must not be revived later."
+        "description": "prewarm_window rebuilds prepared state with the fixed label main-prewarm and does not destroy any surviving hidden webview before rebuilding. After a discard that only clears inventory, a later prewarm/open sequence can attach to the same stale backend window instead of guaranteeing a fresh prepared instance, so VAL-LIFECYCLE-007 and VAL-CROSS-003 are not fully satisfied."
+      },
+      {
+        "file": "src-tauri/src/utils/window.rs",
+        "line": 635,
+        "severity": "blocking",
+        "description": "The added regression tests only exercise helper-map semantics via reserve_prepared_window/take_prepared_window and never verify command-level behavior against a real hidden webview or discard cleanup. That leaves the actual discard/open lifecycle gap untested despite the feature contract requiring authoritative backend-managed prepared state disposal."
       }
     ]
   },
   "sharedStateObservations": [
     {
       "area": "skills",
-      "observation": "The worker explicitly deviated from the skill tests-first step because no concrete prewarm inventory seam existed yet. The skill procedure may need to acknowledge that for backend contract redesigns, creating a minimal state seam before writing meaningful failing tests can be justified.",
-      "evidence": "worker-transcripts.jsonl entry for session 3c8b5e4e-b80b-4da3-bc3c-9f65cc892ff8 plus handoff.skillFeedback.deviations[0]"
+      "observation": "The worker skill requires manual verification on the real Tauri surface before handoff, but this feature handoff reported no interactive checks even though the contract centers on real prepared window lifecycle behavior.",
+      "evidence": "C:\\Users\\admin\\tauri-react\\.factory\\skills\\window-lifecycle-worker\\SKILL.md step 8 requires bun tauri dev verification; handoff 2026-03-17T13-54-16-600Z__typed-prewarm-discard-commands__ffbeb4be-5e6f-4cb2-b344-6a8168633f0e.json lists only command-line verification and an empty interactiveChecks section."
+    },
+    {
+      "area": "knowledge",
+      "observation": "Shared mission library documents the invariant that discarded prewarm state must not be resurrected, but it does not record the concrete implementation pitfall that simply clearing the inventory map is insufficient because a hidden prepared webview may still exist under the reused *-prewarm label.",
+      "evidence": "C:\\Users\\admin\\tauri-react\\.factory\\library\\architecture.md says discarded prewarm state must not be resurrected, while src-tauri/src/utils/window.rs:399-434 shows prewarm/discard currently reuses main-prewarm and only mutates the in-memory map."
     }
   ],
   "addressesFailureFrom": null,
-  "summary": "Review failed: the typed command surface and tests are in place, but the implementation only tracks a synthetic enum inventory and does not actually prewarm/discard backend window state, so discard/non-resurrection guarantees are not fully implemented."
+  "summary": "Fresh scrutiny review failed: typed enum-backed commands are present, but discard/prewarm do not fully dispose of real prepared backend windows, so discarded hidden state can survive and be reused by later prewarm/open flows."
 }
