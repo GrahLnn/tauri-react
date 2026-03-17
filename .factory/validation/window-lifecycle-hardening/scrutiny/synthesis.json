@@ -1,0 +1,38 @@
+{
+  "milestone": "window-lifecycle-hardening",
+  "round": 1,
+  "status": "fail",
+  "validatorsRun": {
+    "test": { "passed": true, "command": "bun test", "exitCode": 0 },
+    "typecheck": { "passed": true, "command": "bun run typecheck", "exitCode": 0 },
+    "lint": { "passed": true, "command": "bun run lint", "exitCode": 0 },
+    "rust-check": { "passed": true, "command": "cargo check --manifest-path src-tauri/Cargo.toml", "exitCode": 0 }
+  },
+  "reviewsSummary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "failedFeatures": ["window-control-ownership-regressions"]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "window-control-ownership-regressions",
+      "severity": "blocking",
+      "description": "src/flow/windowMaximized.ts caches maximize-state actors forever by window label even though Window.getCurrent() is captured at actor creation time, so closing and reopening a window with the same label can reuse a stale actor bound to a disposed native window instead of establishing fresh renderer-local ownership."
+    },
+    {
+      "featureId": "window-control-ownership-regressions",
+      "severity": "blocking",
+      "description": "tests/window_ownership.logic.test.ts does not cover close/reopen with the same window label, leaving VAL-CROSS-004 and the reopen portion of VAL-CONTROLS-007 unverified despite the feature handoff claiming reopen regression coverage."
+    }
+  ],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [],
+  "rejectedObservations": [
+    {
+      "observation": "Add a mission-library note that any per-window cache keyed only by label must define teardown/recreation semantics for close-reopen cycles because Tauri can reuse labels like main-1.",
+      "reason": "Rejected for now because the observation is derived from a single failed feature review and needs confirmation from the eventual fix path before promoting it to durable shared knowledge."
+    }
+  ],
+  "previousRound": null
+}
