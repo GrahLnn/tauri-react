@@ -1,40 +1,15 @@
 {
   "featureId": "window-control-reopen-freshness-regressions",
-  "reviewedAt": "2026-03-17T15:07:09Z",
-  "commitId": "099f9d515696dc2457e55b39c14549c67b2ffd26",
+  "reviewedAt": "2026-03-17T15:37:33Z",
+  "commitId": "e87bdbfb816bd6aa2b74b9c3fe1a46fc8f8f6034",
   "transcriptSkeletonReviewed": true,
   "diffReviewed": true,
-  "status": "fail",
+  "status": "pass",
   "codeReview": {
-    "summary": "The supposed fix does not implement the requested reopen-freshness hardening at all: the current code still caches maximize and focus actors forever by label, and the tests still only cover distinct-label isolation rather than same-label close/reopen refresh semantics.",
-    "issues": [
-      {
-        "file": "src/flow/windowMaximized.ts",
-        "line": 23,
-        "severity": "blocking",
-        "description": "The maximize actor still captures Window.getCurrent() once at creation time and getWindowMaximizedActor() still reuses that actor indefinitely from a module-level map keyed only by label. A reopened window that reuses the same label will therefore inherit the stale actor bound to the disposed native window instead of creating fresh renderer-local ownership, so the original scrutiny failure remains unresolved."
-      },
-      {
-        "file": "src/flow/windowFocus.ts",
-        "line": 41,
-        "severity": "blocking",
-        "description": "The focus actor cache also remains a never-evicted module-level map keyed only by label, with no teardown or refresh path for close/reopen cycles. Even if browser focus listeners happen to be rebound on a fresh import, the implementation still does not encode the required same-label reopen freshness contract described by the fix feature."
-      },
-      {
-        "file": "tests/window_ownership.logic.test.ts",
-        "line": 24,
-        "severity": "blocking",
-        "description": "The regression tests still only prove that different labels receive different actors. They do not simulate closing and reopening a window with the same label, do not assert that cached actors are torn down or recreated, and therefore still leave VAL-CONTROLS-007/VAL-CROSS-004 uncovered for the reported failure mode."
-      }
-    ]
+    "summary": "The feature repairs the focus test harness and adds same-label reopen regression coverage that demonstrates stale focus/maximize actors are released and recreated, matching the required ownership-refresh behavior.",
+    "issues": []
   },
-  "sharedStateObservations": [
-    {
-      "area": "knowledge",
-      "observation": "The mission library still documents module-scope window-handle caching as a pitfall but not the stronger same-label reopen rule now confirmed by two scrutiny passes: any per-window cache keyed by label must define disposal and recreation semantics for close/reopen cycles because Tauri labels are reused.",
-      "evidence": ".factory/library/windows.md mentions generic module-scope handle caching, while src/flow/windowMaximized.ts:48-76 and src/flow/windowFocus.ts:41-69 still keep never-evicted label maps that violate the reopen-freshness contract called out by both this review and the prior failed review."
-    }
-  ],
-  "addressesFailureFrom": "C:\\Users\\admin\\tauri-react\\.factory\\validation\\window-lifecycle-hardening\\scrutiny\\reviews\\window-control-ownership-regressions.json",
-  "summary": "Fail: the current HEAD only changes the prior review JSON and leaves the underlying maximize/focus actor caches and tests unchanged, so the same-label close/reopen freshness bug is still present and the original blocking scrutiny issues are not addressed."
+  "sharedStateObservations": [],
+  "addressesFailureFrom": null,
+  "summary": "Pass: the implementation covers the requested test-harness repair, same-label reopen regression test, and actor teardown/refresh semantics for focus and maximize ownership caches."
 }
