@@ -1,0 +1,21 @@
+{
+  "featureId": "window-close-accounting",
+  "reviewedAt": "2026-03-17T10:33:23.269214+00:00",
+  "commitId": "00c946883781fb1f23e03d6d66091bbf3362ef7f",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The close-accounting change correctly limits app-exit decisions to authoritative user-window labels and adds regression tests covering multi-user, last-user, and non-user close cases. I found no blocking or non-blocking implementation issues in scope for this feature.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The window-lifecycle worker did not follow the skill's manual desktop-surface validation step for this backend-only close-accounting feature, but the deviation appears justified because the change is fully covered by Rust close-accounting tests and the mission already separated desktop-surface validation into dedicated validation features. The skill should explicitly allow automated-only completion for backend-only close-accounting work when no UI behavior changes are introduced.",
+      "evidence": "handoffs/2026-03-17T10-24-21-337Z__window-close-accounting__2c124e28-57c8-4895-8fb1-bc1fe73d5c1a.json skillFeedback.deviations[0]; .factory/skills/window-lifecycle-worker/SKILL.md step 8 requires manual Tauri validation for every feature."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed feature window-close-accounting at commit 00c946883781fb1f23e03d6d66091bbf3362ef7f. The implementation and added Rust regressions satisfy the feature requirements, and no code issues were identified."
+}

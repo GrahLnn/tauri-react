@@ -1,0 +1,21 @@
+{
+  "featureId": "renderer-role-and-control-binding",
+  "reviewedAt": "2026-03-17T10:34:15.277201+00:00",
+  "commitId": "aee310e5367e86e555aa8858dbccd3e3501acdf3",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature correctly gates primary-main-only updater work on resolved ready user-window metadata and rebinds titlebar controls plus fullscreen/maximize subscriptions to each renderer's own native window. I did not find code issues that contradict the feature contract in the reviewed diff.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The worker could not follow the skill's required real-surface manual verification step because startup was still blocked by an early plugin-os/platform-resolution crash; the skill feedback suggests inspecting platform-resolution helpers when bootstrap/titlebar work intersects with early Tauri API access, but that guidance is not in the skill yet.",
+      "evidence": "Handoff skillFeedback.followedProcedure=false with deviation on step 8; commit aee310e updates lib/utils.ts to guard getPlatform against missing __TAURI_OS_PLUGIN_INTERNALS__; .factory/skills/window-controls-worker/SKILL.md step 8 still assumes manual desktop verification is reachable once bun tauri dev starts."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the handoff, transcript skeleton, commit diff, mission guidance, and shared-state docs for renderer-role-and-control-binding. The implementation matches the feature requirements and I found no blocking or non-blocking code defects in the reviewed changes; the only follow-up is a skill/documentation gap around diagnosing early platform-resolution crashes that prevent manual desktop verification."
+}

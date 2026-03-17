@@ -1,0 +1,26 @@
+{
+  "featureId": "validation-surface-launch-stabilization",
+  "reviewedAt": "2026-03-17T10:33:59.709233Z",
+  "commitId": "3d9fb9d",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The change directly addresses the reported startup crash by removing eager plugin-os access from renderer startup, adding a guarded platform resolver with browser fallback, and covering the missing-internals path with regression tests.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The window-controls-worker skill's manual verification step assumes every feature needs multi-window control interaction checks, but this feature only needed startup-stabilization evidence before later validators took over.",
+      "evidence": "C:\\Users\\admin\\tauri-react\\.factory\\skills\\window-controls-worker\\SKILL.md step 8 requires two-window close/minimize/maximize/drag verification, while the feature in C:\\Users\\admin\\.factory\\missions\\f4a6a526-2759-453f-b519-7e5aedca3301\\features.json only expects validation-mode launch to stay alive and logs to remain diagnosable. The handoff C:\\Users\\admin\\.factory\\missions\\f4a6a526-2759-453f-b519-7e5aedca3301\\handoffs\\2026-03-17T10-15-15-711Z__validation-surface-launch-stabilization__8f3764b3-4d10-4cf1-ade0-fec94fca7a5b.json records this as a justified procedure deviation."
+    },
+    {
+      "area": "skills",
+      "observation": "Windows mission setup guidance is incomplete for shell-based init scripts, forcing workers to infer that .factory/init.sh should be read/translated rather than executed with PowerShell.",
+      "evidence": "The transcript skeleton for worker session 8f3764b3-4d10-4cf1-ade0-fec94fca7a5b shows an attempted pwsh -File execution of C:\\Users\\admin\\tauri-react\\.factory\\init.sh, followed by a deviation note in the handoff explaining the file is POSIX shell on Windows and was only read instead."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The diff is narrowly scoped and fixes the documented eager startup crash path by guarding access to Tauri OS plugin internals before renderer startup is fully initialized. Regression coverage was added for the missing-internals case, and I found no blocking or non-blocking defects in scope; only skill-documentation gaps were evident from the worker transcript/handoff."
+}
