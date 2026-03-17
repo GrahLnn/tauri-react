@@ -1,6 +1,6 @@
 {
   "groupId": "desktop-launch-blocked",
-  "testedAt": "2026-03-17T00:00:00Z",
+  "testedAt": "2026-03-17T19:38:38.5673394+08:00",
   "isolation": {
     "surface": "tauri-desktop",
     "platform": "windows",
@@ -12,7 +12,8 @@
     "Read",
     "LS",
     "Glob",
-    "Grep"
+    "Grep",
+    "Execute"
   ],
   "assertions": [
     {
@@ -350,8 +351,8 @@
         "VAL-CROSS-003",
         "VAL-CROSS-004"
       ],
-      "quickFixAttempted": "Inspected repo guidance, startup logs, and startup code paths; localhost readiness exists but cannot substitute for the required Tauri desktop surface."
+      "quickFixAttempted": "Relaunched the canonical `bun tauri dev --no-watch` path from `.factory/services.yaml` with refreshed `.tmp/tauri-dev.log` / `.tmp/tauri-dev.err.log`; Rsbuild reached localhost readiness and rebuilt successfully, but `target\\debug\\app.exe` still exited immediately with code `0xffffffff`, so localhost could not be used as a substitute for the required Tauri desktop surface."
     }
   ],
-  "summary": "Tested 16 assertions: 0 passed, 0 failed, 16 blocked by the Tauri desktop startup crash in @tauri-apps/plugin-os before the real validation surface became interactive."
+  "summary": "Freshly re-ran the canonical Windows desktop launch path and tested 16 assertions: 0 passed, 0 failed, 16 remained blocked because Rsbuild became ready on localhost but `target\\debug\\app.exe` still exited immediately with code `0xffffffff` before the real Tauri validation surface became interactive."
 }
