@@ -9,7 +9,7 @@ commands:
 
 services:
   tauri-dev:
-    start: pwsh -NoLogo -NoProfile -Command "$env:NODE_ENV='development'; $env:PUBLIC_DISABLE_REACT_SCAN='1'; bun tauri dev --no-watch"
+    start: pwsh -NoLogo -NoProfile -Command "$env:NODE_ENV='development'; $env:PUBLIC_DISABLE_REACT_SCAN='1'; Remove-Item '.tmp/tauri-dev.log','.tmp/tauri-dev.err.log' -ErrorAction SilentlyContinue; bun tauri dev --no-watch 1> .tmp/tauri-dev.log 2> .tmp/tauri-dev.err.log"
     stop: pwsh -NoLogo -NoProfile -Command "$pids = @(Get-NetTCPConnection -State Listen -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique); if ($pids.Count -gt 0) { $pids | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }"
     healthcheck: curl -sf http://localhost:3000
     port: 3000
