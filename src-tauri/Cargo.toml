@@ -27,25 +27,25 @@ log = "0.4"
 tauri = { version = "2.10.3", features = ["macos-private-api", "protocol-asset"] }
 tauri-plugin-log = "2.8.0"
 tauri-plugin-shell = "2"
-tokio = { version = "1.50.0", features = ["macros", "rt-multi-thread"] }
-specta = "2.0.0-rc.23"
-specta-typescript = "0.0.10"
-tauri-specta = { git = "https://github.com/specta-rs/tauri-specta.git", rev = "b7cd99b786bd437acdbf2c11ae3e2c955b611a51", features = [
+tokio = { version = "1.52.0", features = ["macros", "rt-multi-thread"] }
+specta = "2.0.0-rc.24"
+specta-typescript = "0.0.11"
+tauri-specta = { git = "https://github.com/specta-rs/tauri-specta.git", rev = "bbf91048bfbc6dc8152b4098e96e377c4e0466b3", features = [
   "derive",
   "typescript",
 ] }
 tauri-plugin-os = "2"
-appdb = "0.2.8"
+appdb = "0.2.16"
 anyhow = "1.0.102"
 async-trait = "0.1.89"
-inventory = "0.3.22"
-surrealdb = { version = "3.0.4", features = ["kv-surrealkv"] }
-surrealdb-types = "3.0.4"
+inventory = "0.3.24"
+surrealdb = { version = "3.0.5", features = ["kv-surrealkv"] }
+surrealdb-types = "3.0.5"
 tauri-plugin-clipboard-manager = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-dialog = "2"
 windows = "0.62.2"
-webview2-com = "0.38.2"
+webview2-com = "0.39.1"
 tauri-plugin-process = "2"
 
 [target.'cfg(target_os = "macos")'.dependencies]

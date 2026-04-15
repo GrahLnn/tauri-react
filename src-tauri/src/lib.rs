@@ -10,63 +10,30 @@ use tauri_specta::{Builder, collect_commands, collect_events};
 use tokio::task::block_in_place;
 use utils::event;
 
-const DB_PATH: &str = "surreal.db";
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let commands = collect_commands![
-        utils::file::exists,
-        utils::core::app_ready,
-        utils::window::get_mouse_and_window_position,
-        utils::window::get_window_kind,
-        utils::window::warm_window,
-        utils::window::cold_window,
-        utils::window::prewarm_window,
-        utils::window::discard_prewarm_window,
-        utils::window::record_renderer_bootstrap_ready,
-        utils::window::create_window,
-        utils::sidecar::run_bun_hello_sidecar,
-        greet,
-        clean,
-    ];
-    let events = collect_events![event::FullScreenEvent];
-
-    let builder: Builder = Builder::new().commands(commands).events(events);
+    let builder = Builder::new()
+        .commands(collect_commands![
+            utils::file::exists,
+            utils::core::app_ready,
+            utils::window::get_mouse_and_window_position,
+            utils::window::get_window_kind,
+            utils::window::warm_window,
+            utils::window::cold_window,
+            utils::window::prewarm_window,
+            utils::window::discard_prewarm_window,
+            utils::window::record_renderer_bootstrap_ready,
+            utils::window::create_window,
+            utils::sidecar::run_bun_hello_sidecar,
+            greet,
+            clean,
+        ])
+        .events(collect_events![event::FullScreenEvent]);
 
     #[cfg(debug_assertions)]
     builder
         .export(
-            specta_typescript::Typescript::default()
-                .bigint(specta_typescript::BigIntExportBehavior::Number)
-                .header(
-                    r#"/* eslint-disable */
-
-type __WebviewWindow__ =
-  | import("@tauri-apps/api/webview").Webview
-  | import("@tauri-apps/api/window").Window;
-
-type __EventObj__<T> = {
-  listen: (cb: (event: { payload: T }) => void) => Promise<() => void>;
-  once: (cb: (event: { payload: T }) => void) => Promise<() => void>;
-  emit: T extends null ? () => Promise<void> : (payload: T) => Promise<void>;
-};
-
-export type EventsShape<T extends Record<string, any>> = {
-  [K in keyof T]: __EventObj__<T[K]> & {
-    (handle: __WebviewWindow__): __EventObj__<T[K]>;
-  };
-};
-
-export function makeLiveEvent<T extends Record<string, any>>(ev: EventsShape<T>) {
-  return function liveEvent<K extends keyof T>(key: K) {
-    return (handler: (payload: T[K]) => void) => {
-      const obj = ev[key] as __EventObj__<T[K]>;
-      return obj.listen((e) => handler(e.payload));
-    };
-  };
-}
-"#,
-                ),
+            specta_typescript::Typescript::default().header(include_str!("commands.header.ts")),
             "../src/cmd/commands.ts",
         )
         .expect("Failed to export typescript bindings");
@@ -103,7 +70,7 @@ export function makeLiveEvent<T extends Record<string, any>>(ev: EventsShape<T>)
                 block_on(async move {
                     let local_data_dir = handle.path().app_local_data_dir()?;
                     std::fs::create_dir_all(&local_data_dir)?;
-                    let db_path = local_data_dir.join(DB_PATH);
+                    let db_path = local_data_dir.join("surreal.db");
                     println!("DB initialized on {}", db_path.display());
                     let db_options = InitDbOptions::default()
                         .versioned(false)
