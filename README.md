@@ -1,4 +1,6 @@
-![Stone Badge](https://stone.professorlee.work/api/stone/GrahLnn/tauri-react)
+<p align="center">
+  <img src="https://stone.professorlee.work/api/stone/GrahLnn/tauri-react" alt="Stone Badge" width="200" />
+</p>
 
 # Tauri + React Modern Template
 
