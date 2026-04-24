@@ -1,3 +1,5 @@
+![Stone Badge](https://stone.professorlee.work/api/stone/GrahLnn/tauri-react)
+
 # Tauri + React Modern Template
 
 A feature-rich Tauri + React development template, integrated with the latest development tools and frameworks.
