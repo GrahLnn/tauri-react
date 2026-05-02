@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import "./App.css";
 import "sileo/styles.css";
-import "@fontsource/maple-mono";
+import "@fontsource/maple-mono/index.css";
 import type { PropsWithChildren } from "react";
 import { useTheme } from "next-themes";
 import { Toaster } from "sileo";
@@ -26,12 +26,7 @@ function WindowMainArea({ children }: PropsWithChildren) {
 function WindowToaster() {
   const { resolvedTheme } = useTheme();
 
-  return (
-    <Toaster
-      position="bottom-right"
-      theme={resolvedTheme === "dark" ? "dark" : "light"}
-    />
-  );
+  return <Toaster position="bottom-right" theme={resolvedTheme === "dark" ? "dark" : "light"} />;
 }
 
 function Base({ children }: PropsWithChildren) {

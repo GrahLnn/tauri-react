@@ -18,7 +18,6 @@
       "allow": [
         {
           "name": "binaries/bun-runtime",
-          "cmd": "",
           "sidecar": true,
           "args": true
         }

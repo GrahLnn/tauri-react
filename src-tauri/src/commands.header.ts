@@ -16,9 +16,7 @@ export type EventsShape<T extends Record<string, any>> = {
   };
 };
 
-export function makeLiveEvent<T extends Record<string, any>>(
-  ev: EventsShape<T>,
-) {
+export function makeLiveEvent<T extends Record<string, any>>(ev: EventsShape<T>) {
   return function liveEvent<K extends keyof T>(key: K) {
     return (handler: (payload: T[K]) => void) => {
       const obj = ev[key] as __EventObj__<T[K]>;

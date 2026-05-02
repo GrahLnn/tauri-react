@@ -8,13 +8,7 @@
     "evidenceDir": "C:\\Users\\admin\\.factory\\missions\\f4a6a526-2759-453f-b519-7e5aedca3301\\evidence\\window-lifecycle-core\\desktop-launch-blocked",
     "notes": "Single-validator desktop run; localhost used only as readiness evidence."
   },
-  "toolsUsed": [
-    "Read",
-    "LS",
-    "Glob",
-    "Grep",
-    "Execute"
-  ],
+  "toolsUsed": ["Read", "LS", "Glob", "Grep", "Execute"],
   "assertions": [
     {
       "id": "VAL-LIFECYCLE-001",

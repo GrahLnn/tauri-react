@@ -27,6 +27,7 @@ Validation surface findings and runtime testing guidance.
   - Port `3000` ownership can be noisy in this environment, so parallel desktop validation would add avoidable flakiness.
 
 ## Runtime Notes
+
 - Desktop unsafe validation for the typed-prewarm mission is currently deferred/manual; implementation workers should still preserve desktop-surface correctness assumptions.
 - Manual desktop validation for this mission should include homepage-triggered prewarm, discard-prewarm, discard-then-open, and open-close-reopen flows in addition to baseline startup/open/close checks.
 - For `window-lifecycle-hardening`, final contract coverage is limited to manual desktop checks for `VAL-CONTROLS-006`, `VAL-CONTROLS-007`, `VAL-CROSS-004`, and `VAL-CROSS-005`; automated evidence from Bun/typecheck/lint and scrutiny handoffs is supporting evidence only and must not be treated as final user-testing proof.

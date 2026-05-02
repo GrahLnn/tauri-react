@@ -1,12 +1,4 @@
-import {
-  collect,
-  defineSS,
-  event,
-  ns,
-  sst,
-  allState,
-  type PayloadEvt,
-} from "@grahlnn/fn/flow";
+import { collect, defineSS, event, ns, sst, allState, type PayloadEvt } from "@grahlnn/fn/flow";
 import type { AppBootstrap } from "../bootstrap";
 
 export const ss = defineSS(ns("mainx", sst(["running"])));

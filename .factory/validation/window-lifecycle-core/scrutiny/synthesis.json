@@ -6,7 +6,11 @@
     "test": { "passed": true, "command": "bun test", "exitCode": 0 },
     "typecheck": { "passed": true, "command": "bun run typecheck", "exitCode": 0 },
     "lint": { "passed": true, "command": "bun run lint", "exitCode": 0 },
-    "rust-check": { "passed": true, "command": "cargo check --manifest-path src-tauri/Cargo.toml", "exitCode": 0 }
+    "rust-check": {
+      "passed": true,
+      "command": "cargo check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0
+    }
   },
   "reviewsSummary": {
     "total": 4,

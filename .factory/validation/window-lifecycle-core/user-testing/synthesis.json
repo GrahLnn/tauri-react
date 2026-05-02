@@ -11,22 +11,70 @@
   "passedAssertions": [],
   "failedAssertions": [],
   "blockedAssertions": [
-    { "id": "VAL-LIFECYCLE-001", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-LIFECYCLE-002", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-LIFECYCLE-003", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-LIFECYCLE-004", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-LIFECYCLE-005", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-LIFECYCLE-006", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-LIFECYCLE-007", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CONTROLS-001", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CONTROLS-002", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CONTROLS-003", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CONTROLS-004", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CONTROLS-005", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CONTROLS-006", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CROSS-001", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CROSS-003", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." },
-    { "id": "VAL-CROSS-004", "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`." }
+    {
+      "id": "VAL-LIFECYCLE-001",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-LIFECYCLE-002",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-LIFECYCLE-003",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-LIFECYCLE-004",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-LIFECYCLE-005",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-LIFECYCLE-006",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-LIFECYCLE-007",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CONTROLS-001",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CONTROLS-002",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CONTROLS-003",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CONTROLS-004",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CONTROLS-005",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CONTROLS-006",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CROSS-001",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CROSS-003",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    },
+    {
+      "id": "VAL-CROSS-004",
+      "blockedBy": "Fresh canonical `bun tauri dev --no-watch` launch still exits before the interactive desktop surface appears: Rsbuild reaches localhost readiness, then `target\\debug\\app.exe` exits immediately with code `0xffffffff`."
+    }
   ],
   "appliedUpdates": [],
   "previousRound": ".factory/validation/window-lifecycle-core/user-testing/synthesis.json#round-1"
